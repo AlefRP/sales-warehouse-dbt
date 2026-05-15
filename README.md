@@ -119,3 +119,7 @@ docker compose down -v                   # parar e apagar dados
 | `TZ`                | `America/Sao_Paulo`   | fuso usado pelo APScheduler            |
 
 ---
+
+## Licenca
+
+This project is licensed under the [MIT License](LICENSE). Feel free to use and adapt any part of this project in your own data workflows.
