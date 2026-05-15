@@ -128,11 +128,3 @@ docker compose down -v                   # parar e apagar dados
 | `TZ`                | `America/Sao_Paulo`   | fuso usado pelo APScheduler            |
 
 ---
-
-## Roadmap sugerido
-
-- [ ] Autenticação básica no orchestrator.
-- [ ] Webhook em falha (Slack/Discord).
-- [ ] Visualização do DAG dbt (`dbt docs serve` em outra porta).
-- [ ] Métricas Prometheus + dashboard Grafana.
-- [ ] CI no GitHub Actions com `dbt build --select state:modified+`.
