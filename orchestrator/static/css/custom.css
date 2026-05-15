@@ -12,6 +12,14 @@ body {
     letter-spacing: -0.3px;
 }
 
+.navbar-brand .brand-icon {
+    color: var(--brand) !important;
+}
+
+.navbar-brand .brand-icon::before {
+    color: var(--brand) !important;
+}
+
 .navbar-brand .brand-dot {
     color: var(--brand);
 }

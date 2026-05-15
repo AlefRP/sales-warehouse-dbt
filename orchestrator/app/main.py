@@ -37,7 +37,7 @@ async def lifespan(_: FastAPI):
     sched.shutdown()
 
 
-app = FastAPI(title="postgres_dbt orchestrator", lifespan=lifespan)
+app = FastAPI(title="sales-warehouse-dbt orchestrator", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="orchestrator/static"), name="static")
 app.include_router(pages.router)
 app.include_router(jobs.router)

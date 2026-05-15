@@ -1,6 +1,8 @@
-# postgres_dbt
+# SalesWarehouse DBT
 
-Projeto de analytics com **dbt + Postgres** acompanhado de um **orquestrador web** (FastAPI + APScheduler) com interface Bootstrap para agendar e monitorar execuções do dbt — tudo containerizado.
+Projeto de analytics para um **sales warehouse** com **dbt + Postgres**. O pipeline parte de dados brutos de clientes, pedidos, itens de pedido e churn, cria modelos de staging tipados e testados, e publica marts analíticos como `dim_customers` e `fct_orders` para acompanhar clientes, volume de pedidos, itens vendidos e lifetime value.
+
+O projeto também inclui um **orquestrador web** (FastAPI + APScheduler) com interface Bootstrap para agendar e monitorar execuções do dbt — tudo containerizado.
 
 ![Arquitetura do projeto dbt + Postgres](doc/diagrama-dbt-postgres.png)
 
@@ -9,7 +11,7 @@ Projeto de analytics com **dbt + Postgres** acompanhado de um **orquestrador web
 ## Estrutura
 
 ```text
-postgres_dbt/
+sales-warehouse-dbt/
 ├── dbt_project.yml          # projeto dbt
 ├── profiles.yml             # conexão com Postgres (lê env vars)
 ├── packages.yml             # dbt_utils, dbt_expectations
