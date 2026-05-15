@@ -1,0 +1,11 @@
+customerid,surname,creditscore,geography,gender,tenure,balance,numofproducts,hascrcard,isactivemember,estimatedsalary,exited
+1,Souza,650,Brazil,M,3,0.00,1,true,true,50000.00,0
+2,Silva,720,Brazil,F,5,15000.00,2,true,false,72000.00,0
+3,Pereira,580,Brazil,M,1,2000.00,1,false,false,30000.00,1
+4,Oliveira,690,Brazil,F,7,32000.00,3,true,true,88000.00,0
+5,Costa,610,Portugal,M,2,5000.00,1,true,false,45000.00,1
+6,Fernandes,710,Spain,F,4,20000.00,2,true,true,69000.00,0
+7,Almeida,540,Brazil,M,1,0.00,1,false,false,28000.00,1
+8,Rocha,680,Portugal,F,6,18500.00,2,true,true,75000.00,0
+9,Lima,590,Brazil,M,2,1200.00,1,true,false,33000.00,1
+10,Martins,705,Spain,F,8,40000.00,3,true,true,95000.00,0

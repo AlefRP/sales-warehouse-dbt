@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_pill, trigger_badge %}
+{% block title %}Execuções · postgres_dbt{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0">Execuções</h1>
+    <a href="/jobs" class="btn btn-outline-secondary"><i class="bi bi-list-task"></i> Agendamentos</a>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-hover mb-0">
+            <thead class="table-light">
+            <tr>
+                <th>#</th><th>Job</th><th>Status</th><th>Trigger</th>
+                <th>Início</th><th>Duração</th><th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in runs %}
+            <tr>
+                <td class="text-secondary">{{ r.id }}</td>
+                <td class="fw-medium">{{ r.job.name if r.job else "—" }}</td>
+                <td>{{ status_pill(r.status) }}</td>
+                <td>{{ trigger_badge(r.trigger) }}</td>
+                <td class="small text-secondary">{{ r.started_at | fmt_dt }}</td>
+                <td class="small text-secondary">{{ r.duration_seconds | fmt_duration }}</td>
+                <td><a href="/runs/{{ r.id }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i> ver</a></td>
+            </tr>
+            {% else %}
+            <tr><td colspan="7" class="empty-state">Nenhuma execução registrada.</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.spinning { display:inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+</style>
+{% endblock %}

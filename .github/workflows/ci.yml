@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    name: Ruff + Pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: orchestrator/requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r orchestrator/requirements-dev.txt
+
+      - name: Ruff lint
+        run: ruff check .
+
+      - name: Ruff format check
+        run: ruff format --check .
+
+      - name: Pytest
+        run: pytest
+
+      - name: Upload coverage artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+          if-no-files-found: ignore
+
+  dbt-parse:
+    name: dbt parse
+    runs-on: ubuntu-latest
+    env:
+      # dbt parse precisa de um profile válido, mas não conecta ao DB.
+      # Valores fake só pra render do profiles.yml.
+      DBT_PG_HOST: localhost
+      DBT_PG_PORT: "5432"
+      DBT_PG_USER: ci
+      DBT_PG_PASSWORD: ci
+      DBT_PG_DBNAME: ci
+      DBT_PG_SCHEMA: dev
+      DBT_TARGET: dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dbt
+        run: |
+          python -m pip install --upgrade pip
+          pip install "dbt-core==1.8.7" "dbt-postgres==1.8.2"
+
+      - name: dbt deps
+        run: dbt deps --project-dir . --profiles-dir .
+
+      - name: dbt parse
+        run: dbt parse --project-dir . --profiles-dir . --target dev

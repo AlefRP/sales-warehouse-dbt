@@ -1,0 +1,52 @@
+version: 2
+
+models:
+  - name: stg_raw__customers
+    description: "Clientes tipados e renomeados. Granularidade: 1 linha por cliente."
+    columns:
+      - name: customer_id
+        description: "Chave primária."
+        data_tests: [unique, not_null]
+      - name: full_name
+        description: "Nome completo concatenado com tratamento de NULL."
+      - name: email
+        data_tests: [not_null]
+
+  - name: stg_raw__orders
+    description: "Pedidos tipados. Granularidade: 1 linha por pedido."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_raw__customers')
+              field: customer_id
+      - name: order_date
+        data_tests: [not_null]
+      - name: total_amount
+        data_tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: stg_raw__order_items
+    description: "Itens de pedido. Granularidade: order_id + product_name."
+    columns:
+      - name: order_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('stg_raw__orders')
+              field: order_id
+
+  - name: stg_raw__customer_churn
+    description: "Snapshot bancário de clientes com indicador de churn."
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: exited
+        data_tests:
+          - accepted_values:
+              values: [0, 1]

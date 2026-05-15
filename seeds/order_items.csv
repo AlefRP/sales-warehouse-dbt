@@ -1,0 +1,6 @@
+order_id,product_name,quantity,price
+1001,Notebook,1,500.00
+1002,Mochila,2,100.00
+1003,Livro,3,50.00
+1004,Monitor,2,500.00
+1004,Teclado,1,50.00

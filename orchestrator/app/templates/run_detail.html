@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_pill, trigger_badge %}
+{% block title %}Execução #{{ run.id }} · postgres_dbt{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="/runs">Execuções</a></li>
+        <li class="breadcrumb-item active">#{{ run.id }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex flex-wrap align-items-center gap-3 mb-3">
+    <h1 class="h4 mb-0">Run #{{ run.id }} — {{ run.job.name if run.job else "—" }}</h1>
+    <span id="status-pill">{{ status_pill(run.status) }}</span>
+    {{ trigger_badge(run.trigger) }}
+</div>
+
+<div class="row g-3 mb-3">
+    <div class="col-md-3"><small class="text-secondary d-block">Comando</small><code>{{ run.command_line or '—' }}</code></div>
+    <div class="col-md-3"><small class="text-secondary d-block">Início</small>{{ run.started_at | fmt_dt }}</div>
+    <div class="col-md-3"><small class="text-secondary d-block">Duração</small>{{ run.duration_seconds | fmt_duration }}</div>
+    <div class="col-md-3"><small class="text-secondary d-block">Retorno</small>{{ run.return_code if run.return_code is not none else '—' }}</div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+    <strong>Log</strong>
+    <a class="btn btn-sm btn-outline-secondary" href="/runs/{{ run.id }}/log.txt" target="_blank">
+        <i class="bi bi-download"></i> baixar
+    </a>
+</div>
+
+<div id="log-container"
+     hx-get="/runs/{{ run.id }}/log"
+     hx-trigger="load{% if run.status == 'running' %}, every 2s{% endif %}"
+     hx-swap="innerHTML">
+    <div class="log-box text-secondary">carregando log…</div>
+</div>
+
+<style>
+.spinning { display:inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+</style>
+{% endblock %}

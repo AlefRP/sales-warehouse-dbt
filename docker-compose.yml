@@ -1,0 +1,31 @@
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.orchestrator
+    container_name: postgres_dbt_orchestrator
+    environment:
+      DBT_PG_HOST: ${DBT_PG_HOST:-host.docker.internal}
+      DBT_PG_PORT: ${DBT_PG_PORT:-5432}
+      DBT_PG_USER: ${DBT_PG_USER:-postgres}
+      DBT_PG_PASSWORD: ${DBT_PG_PASSWORD}
+      DBT_PG_DBNAME: ${DBT_PG_DBNAME}
+      DBT_PG_SCHEMA: ${DBT_PG_SCHEMA:-dev}
+      DBT_TARGET: ${DBT_TARGET:-dev}
+      DBT_PROFILES_DIR: /dbt
+      DBT_PROJECT_DIR: /dbt
+      ORCHESTRATOR_DB_URL: sqlite:////data/orchestrator.db
+      ORCHESTRATOR_LOGS_DIR: /data/logs
+      TZ: ${TZ:-America/Sao_Paulo}
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./:/dbt
+      - orchestrator_data:/data
+    # Linux: host.docker.internal não existe por padrão; o mapping abaixo cobre.
+    # No Docker Desktop (Win/Mac) é redundante mas inofensivo.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  orchestrator_data:

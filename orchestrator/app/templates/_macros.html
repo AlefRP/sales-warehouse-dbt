@@ -1,0 +1,16 @@
+{% macro status_pill(status) -%}
+    {% set icon = {'success': 'check-circle', 'failed': 'x-circle', 'running': 'arrow-repeat'}.get(status, 'question-circle') %}
+    {% set label = {'success': 'sucesso', 'failed': 'falhou', 'running': 'executando'}.get(status, status) %}
+    <span class="status-pill status-{{ status }}">
+        <i class="bi bi-{{ icon }}{% if status == 'running' %} spinning{% endif %}"></i>
+        {{ label }}
+    </span>
+{%- endmacro %}
+
+{% macro trigger_badge(trigger) -%}
+    {% if trigger == 'manual' %}
+        <span class="badge text-bg-warning-subtle text-warning-emphasis"><i class="bi bi-hand-index"></i> manual</span>
+    {% else %}
+        <span class="badge text-bg-info-subtle text-info-emphasis"><i class="bi bi-clock-history"></i> agendado</span>
+    {% endif %}
+{%- endmacro %}

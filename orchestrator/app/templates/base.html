@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}postgres_dbt orchestrator{% endblock %}</title>
+    <link href="/static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/vendor/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/static/css/custom.css" rel="stylesheet">
+    <script src="/static/vendor/htmx/htmx.min.js" defer></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg border-bottom bg-body-tertiary">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+            <i class="bi bi-stack"></i>
+            postgres<span class="brand-dot">_</span>dbt
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="nav" class="collapse navbar-collapse">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link {% if request.url.path == '/' %}active{% endif %}" href="/">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.url.path.startswith('/jobs') %}active{% endif %}" href="/jobs">Agendamentos</a></li>
+                <li class="nav-item"><a class="nav-link {% if request.url.path.startswith('/runs') %}active{% endif %}" href="/runs">Execuções</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-2">
+                <a href="/docs" target="_blank" class="btn btn-sm btn-outline-secondary"><i class="bi bi-code-slash"></i> API</a>
+                <button id="theme-toggle" class="btn btn-sm btn-outline-secondary" type="button" title="Alternar tema">
+                    <i class="bi bi-moon-stars"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="container py-4 text-center text-secondary small">
+    postgres_dbt orchestrator · FastAPI + APScheduler + dbt
+</footer>
+
+<script src="/static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script>
+    (function () {
+        const saved = localStorage.getItem("theme") || "light";
+        document.documentElement.setAttribute("data-bs-theme", saved);
+        document.getElementById("theme-toggle").addEventListener("click", () => {
+            const cur = document.documentElement.getAttribute("data-bs-theme");
+            const next = cur === "dark" ? "light" : "dark";
+            document.documentElement.setAttribute("data-bs-theme", next);
+            localStorage.setItem("theme", next);
+        });
+    })();
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

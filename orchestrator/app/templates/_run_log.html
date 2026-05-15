@@ -1,0 +1,15 @@
+{% from "_macros.html" import status_pill %}
+{# out-of-band swap atualiza o pill de status no topo da página #}
+<span id="status-pill" hx-swap-oob="true">{{ status_pill(run.status) }}</span>
+
+<pre class="log-box" id="log-pre">{{ log or '(sem saída ainda)' }}</pre>
+<script>
+    (function () {
+        const pre = document.getElementById('log-pre');
+        if (!pre) return;
+        // Auto-scroll só se o usuário já está perto do fim — evita arrancá-lo
+        // do meio do log quando ele rolou para cima para ler algo.
+        const nearBottom = pre.scrollHeight - pre.scrollTop - pre.clientHeight < 80;
+        if (nearBottom) pre.scrollTop = pre.scrollHeight;
+    })();
+</script>

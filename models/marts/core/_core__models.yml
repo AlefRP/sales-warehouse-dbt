@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "Dimensão de clientes enriquecida com métricas de pedido."
+    columns:
+      - name: customer_id
+        data_tests: [unique, not_null]
+      - name: full_name
+        data_tests: [not_null]
+      - name: lifetime_value
+        data_tests:
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+
+  - name: fct_orders
+    description: "Fato de pedidos com itens agregados."
+    columns:
+      - name: order_id
+        data_tests: [unique, not_null]
+      - name: customer_id
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customers')
+              field: customer_id
+      - name: order_date
+        data_tests: [not_null]

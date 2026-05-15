@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% from "_macros.html" import status_pill %}
+{% block title %}Dashboard · postgres_dbt{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <h1 class="h3 mb-1">Dashboard</h1>
+        <p class="text-secondary mb-0">Visão geral dos agendamentos e execuções.</p>
+    </div>
+    <a href="/jobs/new" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Novo Agendamento</a>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100 bg-body">
+            <div class="stat-label">Agendamentos</div>
+            <div class="stat-value">{{ stats.active_jobs }}<span class="text-secondary fs-6">/{{ stats.total_jobs }}</span></div>
+            <div class="small text-secondary">ativos</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100 bg-body">
+            <div class="stat-label">Taxa de Sucesso</div>
+            <div class="stat-value">{% if stats.success_rate is not none %}{{ "%.0f"|format(stats.success_rate) }}%{% else %}—{% endif %}</div>
+            <div class="small text-secondary">{{ stats.total_runs }} execuções</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100 bg-body">
+            <div class="stat-label">Em execução</div>
+            <div class="stat-value text-primary">{{ stats.running }}</div>
+            <div class="small text-secondary">agora</div>
+        </div>
+    </div>
+    <div class="col-6 col-md-3">
+        <div class="stat-card p-3 h-100 bg-body">
+            <div class="stat-label">Falhas</div>
+            <div class="stat-value {% if stats.failed %}text-danger{% endif %}">{{ stats.failed }}</div>
+            <div class="small text-secondary">histórico</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-body d-flex justify-content-between align-items-center">
+                <strong>Últimas execuções</strong>
+                <a href="/runs" class="small">ver todas →</a>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Job</th><th>Status</th><th>Início</th><th>Duração</th><th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for r in recent %}
+                        <tr>
+                            <td>{{ r.job.name if r.job else "—" }}</td>
+                            <td>{{ status_pill(r.status) }}</td>
+                            <td class="text-secondary small">{{ r.started_at | fmt_dt }}</td>
+                            <td class="text-secondary small">{{ r.duration_seconds | fmt_duration }}</td>
+                            <td><a href="/runs/{{ r.id }}" class="btn btn-sm btn-outline-secondary"><i class="bi bi-eye"></i></a></td>
+                        </tr>
+                    {% else %}
+                        <tr><td colspan="5" class="empty-state">Nenhuma execução ainda.</td></tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-5">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-body"><strong>Próximas execuções</strong></div>
+            <ul class="list-group list-group-flush">
+            {% for job, when in next_runs %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="fw-medium">{{ job.name }}</div>
+                        <small class="text-secondary cron-hint">dbt {{ job.command }} · {{ job.cron }}</small>
+                    </div>
+                    <span class="badge text-bg-light">{{ when.strftime("%d/%m %H:%M") }}</span>
+                </li>
+            {% else %}
+                <li class="list-group-item empty-state">Sem agendamentos ativos.</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+.spinning { display:inline-block; animation: spin 1s linear infinite; }
+@keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+</style>
+{% endblock %}

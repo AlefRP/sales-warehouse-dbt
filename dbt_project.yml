@@ -1,0 +1,70 @@
+name: 'postgres_dbt'
+version: '1.0.0'
+config-version: 2
+require-dbt-version: [">=1.7.0", "<2.0.0"]
+
+profile: 'postgres_dbt'
+
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+vars:
+  start_date: '2023-01-01'
+
+models:
+  postgres_dbt:
+    staging:
+      +materialized: view
+      +schema: staging
+      +tags: ['staging']
+    intermediate:
+      +materialized: ephemeral
+      +schema: intermediate
+    marts:
+      +materialized: table
+      +schema: marts
+      +tags: ['marts']
+
+seeds:
+  postgres_dbt:
+    +schema: raw
+    customers:
+      +column_types:
+        customer_id: integer
+        first_name: varchar(100)
+        last_name: varchar(100)
+        email: varchar(255)
+    orders:
+      +column_types:
+        order_id: integer
+        customer_id: integer
+        order_date: date
+        total_amount: numeric(10,2)
+    order_items:
+      +column_types:
+        order_id: integer
+        product_name: varchar(255)
+        quantity: integer
+        price: numeric(10,2)
+    customer_churn:
+      +column_types:
+        customerid: integer
+        creditscore: integer
+        tenure: integer
+        balance: numeric(12,2)
+        numofproducts: integer
+        estimatedsalary: numeric(12,2)
+        exited: integer
+
+snapshots:
+  postgres_dbt:
+    +target_schema: snapshots
+    +strategy: timestamp

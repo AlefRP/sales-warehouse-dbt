@@ -1,0 +1,24 @@
+postgres_dbt:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('DBT_PG_HOST', 'postgres') }}"
+      port: "{{ env_var('DBT_PG_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_PG_USER', 'dbt') }}"
+      password: "{{ env_var('DBT_PG_PASSWORD', 'dbt') }}"
+      dbname: "{{ env_var('DBT_PG_DBNAME', 'analytics') }}"
+      schema: "{{ env_var('DBT_PG_SCHEMA', 'dev') }}"
+      threads: 4
+      keepalives_idle: 0
+      sslmode: prefer
+    prod:
+      type: postgres
+      host: "{{ env_var('DBT_PG_HOST') }}"
+      port: "{{ env_var('DBT_PG_PORT', '5432') | int }}"
+      user: "{{ env_var('DBT_PG_USER') }}"
+      password: "{{ env_var('DBT_PG_PASSWORD') }}"
+      dbname: "{{ env_var('DBT_PG_DBNAME') }}"
+      schema: "{{ env_var('DBT_PG_SCHEMA', 'analytics') }}"
+      threads: 8
+      sslmode: require

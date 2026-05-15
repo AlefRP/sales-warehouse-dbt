@@ -1,0 +1,25 @@
+target/
+dbt_packages/
+logs/
+.user.yml
+.env
+*.duckdb
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+orchestrator/data/
+dbt_internal_packages/
+
+# Test/lint caches
+.pytest_cache/
+.ruff_cache/
+htmlcov/
+coverage.xml
+.coverage
+.coverage.*
+
+# Claude Code / Cursor / IDE local state
+.claude/
