@@ -2,18 +2,7 @@
 
 Projeto de analytics com **dbt + Postgres** acompanhado de um **orquestrador web** (FastAPI + APScheduler) com interface Bootstrap para agendar e monitorar execuções do dbt — tudo containerizado.
 
-```text
-┌──────────────────────────────────────────────────────────────┐
-│  docker compose up -d                                        │
-│                                                              │
-│   ┌──────────────┐         ┌────────────────────────────┐    │
-│   │  postgres    │◄────────┤  orchestrator              │    │
-│   │  (warehouse) │         │  FastAPI + APScheduler+dbt │    │
-│   └──────────────┘         └────────────┬───────────────┘    │
-│                                          │                   │
-│                              http://localhost:8000           │
-└──────────────────────────────────────────────────────────────┘
-```
+![Arquitetura do projeto dbt + Postgres](doc/diagrama-dbt-postgres.png)
 
 ---
 
